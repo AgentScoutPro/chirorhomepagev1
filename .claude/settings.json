@@ -5,8 +5,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd /Users/cod3ai/chirorhomepagev1 && git add -A && git diff --staged --quiet || (git commit -m \"auto-update: sync changes [$(date '+%Y-%m-%d %H:%M')]\" && git push origin main) && vercel --prod --yes 2>&1 | tail -5",
-            "timeout": 180,
+            "command": "cd /Users/cod3ai/chirorhomepagev1 && git add -A && git diff --staged --quiet || (git commit -m \"auto-update: sync changes [$(date '+%Y-%m-%d %H:%M')]\" && git push origin main) && vercel build --prod && vercel deploy --prebuilt --prod 2>&1 | tail -5",
+            "timeout": 300,
             "statusMessage": "Pushing to GitHub & deploying to Vercel...",
             "async": true
           }

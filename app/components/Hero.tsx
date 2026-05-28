@@ -20,7 +20,7 @@ export default function Hero() {
 
   useGSAP(
     () => {
-      // ── Page-load intro ───────────────────────────────────────────────────
+      // ── Page-load intro (runs immediately, independent of video load) ─────
       gsap.timeline({ delay: 0.15 })
         .from(".hero-eyebrow", { y: 18, opacity: 0, duration: 0.7,  ease: "power3.out" })
         .from(".hero-h1",      { y: 40, opacity: 0, duration: 0.95, ease: "power3.out" }, "-=0.35")
@@ -28,40 +28,73 @@ export default function Hero() {
         .from(".hero-actions", { y: 18, opacity: 0, duration: 0.7,  ease: "power3.out" }, "-=0.45")
         .from(".hero-kpis",    { y: 14, opacity: 0, duration: 0.6,  ease: "power3.out" }, "-=0.4");
 
-      // ── Video scrub: scroll distance → currentTime (direct, no lag) ──────
-      // NOTE: no pin:true — sticky CSS handles viewport lock (Lenis-safe)
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        onUpdate: (self) => {
-          const v = videoRef.current;
-          if (v && v.readyState >= 2 && v.duration) {
-            v.currentTime = self.progress * v.duration;
-          }
-        },
-      });
+      // ── ScrollTrigger setup — deferred until video metadata is ready ──────
+      // This guarantees ScrollTrigger measures the container AFTER all assets
+      // are loaded so start/end positions are pixel-perfect from frame one.
+      //
+      // NOTE: sticky CSS replaces pin:true (pin:true conflicts with Lenis smooth
+      // scroll). anticipatePin is only needed with pin:true so it is omitted.
+      const buildScrollTriggers = () => {
+        // Kill any stale instances before rebuilding (safe on re-fire)
+        ScrollTrigger.getAll()
+          .filter((st) => st.vars.trigger === containerRef.current)
+          .forEach((st) => st.kill());
 
-      // ── Text fade: scrubbed + smoothed ────────────────────────────────────
-      gsap.timeline({
-        scrollTrigger: {
+        // ── Video scrub: scrub:0.5 = snappy, near-instant response ──────────
+        ScrollTrigger.create({
           trigger: containerRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.5,
-        },
-      }).to(heroTextRef.current, {
-        opacity: 0,
-        scale: 0.95,
-        y: -40,
-        ease: "none",
-      });
+          start: "top top",       // triggers the moment the hero hits the top
+          end: "bottom bottom",   // fills the full 200vh sticky scroll range
+          scrub: 0.5,             // fast scrub — video tracks the wheel closely
+          onUpdate: (self) => {
+            const v = videoRef.current;
+            if (v && v.readyState >= 2 && v.duration) {
+              v.currentTime = self.progress * v.duration;
+            }
+          },
+        });
 
-      // ── Refresh on resize so progress/time mapping stays accurate ─────────
+        // ── Text fade: slightly softer scrub for a cinematic feel ───────────
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1,
+          },
+        }).to(heroTextRef.current, {
+          opacity: 0,
+          scale: 0.95,
+          y: -40,
+          ease: "none",
+        });
+
+        // Force a full recalculation so every trigger zone is correct on boot
+        ScrollTrigger.refresh();
+      };
+
+      const video = videoRef.current;
+      if (video) {
+        if (video.readyState >= 1) {
+          // Metadata already available (e.g. cached) — init immediately
+          buildScrollTriggers();
+        } else {
+          // Wait for browser to parse video dimensions/duration before building
+          video.addEventListener("loadedmetadata", buildScrollTriggers, { once: true });
+        }
+      }
+
+      // Also call refresh once the full page (fonts, images) has settled
+      if (document.readyState === "complete") {
+        ScrollTrigger.refresh();
+      } else {
+        window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+      }
+
+      // ── Re-sync video time after any window resize recalculation ──────────
       ScrollTrigger.addEventListener("refreshInit", () => {
         const v = videoRef.current;
         if (!v || !v.duration) return;
-        // Re-sync video to current scroll progress after layout recalc
         const st = ScrollTrigger.getAll().find(
           (s) => s.vars.trigger === containerRef.current
         );

@@ -86,15 +86,12 @@ export default function Hero() {
           <div ref={headingRef}>
             <div
               style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                background: "rgba(8,145,178,0.08)", border: "1px solid rgba(8,145,178,0.2)",
-                borderRadius: 50, padding: "6px 16px", marginBottom: 22,
+                marginBottom: 22,
                 fontSize: "0.75rem", fontWeight: 600, color: "#0891B2",
                 letterSpacing: "0.06em", textTransform: "uppercase",
                 fontFamily: "var(--font-body)",
               }}
             >
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0891B2", display: "inline-block" }} />
               Mesa, AZ · East Valley Chiropractic Clinic
             </div>
 

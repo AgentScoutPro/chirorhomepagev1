@@ -92,9 +92,7 @@ export default function JourneyMap() {
           <div style={{ textAlign: "center", marginBottom: 44 }}>
             <div
               style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                background: "rgba(8,145,178,0.07)", border: "1px solid rgba(8,145,178,0.18)",
-                borderRadius: 50, padding: "6px 16px", marginBottom: 18,
+                marginBottom: 18,
                 fontSize: "0.75rem", fontWeight: 600, color: "#0891B2",
                 letterSpacing: "0.06em", textTransform: "uppercase",
                 fontFamily: "var(--font-body)",
@@ -167,9 +165,7 @@ export default function JourneyMap() {
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <div
               style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                background: "rgba(8,145,178,0.07)", border: "1px solid rgba(8,145,178,0.18)",
-                borderRadius: 50, padding: "6px 16px", marginBottom: 18,
+                marginBottom: 18,
                 fontSize: "0.75rem", fontWeight: 600, color: "#0891B2",
                 letterSpacing: "0.06em", textTransform: "uppercase",
                 fontFamily: "var(--font-body)",

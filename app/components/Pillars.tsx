@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { AlertCircle, Dumbbell, HeartCrack, CircleHelp } from "lucide-react";
+import { Dumbbell, HeartCrack, CircleHelp } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -63,15 +63,12 @@ export default function Pillars() {
         <div ref={headRef} style={{ textAlign: "center", marginBottom: 56 }}>
           <div
             style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              background: "rgba(244,63,94,0.07)", border: "1px solid rgba(244,63,94,0.18)",
-              borderRadius: 50, padding: "6px 16px", marginBottom: 18,
+              marginBottom: 18,
               fontSize: "0.75rem", fontWeight: 600, color: "#F43F5E",
               letterSpacing: "0.06em", textTransform: "uppercase",
               fontFamily: "var(--font-body)",
             }}
           >
-            <AlertCircle size={13} color="#F43F5E" />
             Who We Help
           </div>
           <h2

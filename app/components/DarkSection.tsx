@@ -83,15 +83,12 @@ export default function DarkSection() {
         <div ref={headRef} style={{ textAlign: "center", marginBottom: 68 }}>
           <div
             style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              background: "rgba(0,212,184,0.1)", border: "1px solid rgba(0,212,184,0.25)",
-              borderRadius: 50, padding: "6px 16px", marginBottom: 18,
+              marginBottom: 18,
               fontSize: "0.75rem", fontWeight: 600,
               color: "#00D4B8", letterSpacing: "0.06em",
               textTransform: "uppercase", fontFamily: "var(--font-body)",
             }}
           >
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00D4B8", display: "inline-block" }} />
             Chiropractor-Led · Fully Integrated
           </div>
           <h2

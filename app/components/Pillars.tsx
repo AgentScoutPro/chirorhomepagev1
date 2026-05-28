@@ -3,201 +3,333 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Dumbbell, HeartCrack, CircleHelp } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const PROBLEMS = [
-  "Chronic neck, mid-back, and low back pain",
-  "Sciatica and radiating leg pain",
-  "Peripheral neuropathy (burning, tingling, numbness in feet or hands)",
-  "Shoulder, hip, and knee pain from arthritis or overuse",
-  "Pain from auto accidents, work injuries, or sports injuries",
-  "Headaches and migraines",
-];
-
-const FEELINGS = [
-  "Frustrated with temporary relief from medications",
-  "Unsure what's actually causing your pain or nerve symptoms",
-  "Worried about surgery or long-term opioids",
-  "Ready for a plan that looks at the whole body, not just one symptom",
+// ─── Step / panel data ────────────────────────────────────────────────────────
+const STEPS = [
+  {
+    id:    "step-1",
+    num:   "01",
+    title: "Advanced Chiropractic",
+    panelId: "content-chiro",
+    tag:   "Pillar One",
+    accent: "#2dd4bf",
+    gradFrom: "rgba(45,212,191,0.18)",
+    borderColor: "rgba(45,212,191,0.35)",
+    panelTitle: "Precision Spinal Decompression & Adjustments",
+    panelBody:  "Targeting root neurological paths to shut off pain loops permanently — using digital scanning and advanced biomechanical analysis tailored to each patient.",
+    bullets: [
+      "Digital posture & spinal scanning",
+      "Cervical, thoracic & lumbar adjustments",
+      "Non-surgical spinal decompression",
+      "Neuropathy & nerve pain protocols",
+    ],
+  },
+  {
+    id:    "step-2",
+    num:   "02",
+    title: "Medical Physical Therapy",
+    panelId: "content-pt",
+    tag:   "Pillar Two",
+    accent: "#a78bfa",
+    gradFrom: "rgba(167,139,250,0.18)",
+    borderColor: "rgba(167,139,250,0.35)",
+    panelTitle: "In-House Functional Rehab & Physical Therapy",
+    panelBody:  "Re-training soft tissue structures to guarantee adjustments hold long-term — corrective movement science, manual therapy, and post-injury rehabilitation under one roof.",
+    bullets: [
+      "Functional movement assessment",
+      "Corrective exercise programming",
+      "Soft tissue & manual therapy",
+      "Post-injury & post-surgical rehab",
+    ],
+  },
+  {
+    id:    "step-3",
+    num:   "03",
+    title: "Regenerative & Peptide Support",
+    panelId: "content-med",
+    tag:   "Pillar Three",
+    accent: "#22d3ee",
+    gradFrom: "rgba(34,211,238,0.18)",
+    borderColor: "rgba(34,211,238,0.35)",
+    panelTitle: "Peptide & Custom Metabolic Support",
+    panelBody:  "Accelerating cellular tissue healing from the inside out — hormone optimization, peptide therapy, and physician-guided weight loss to support full-body recovery and performance.",
+    bullets: [
+      "Hormone replacement therapy (HRT)",
+      "Peptide therapy for recovery & performance",
+      "Medical weight loss programs",
+      "Metabolic & energy optimization",
+    ],
+  },
 ];
 
 export default function Pillars() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headRef    = useRef<HTMLDivElement>(null);
-  const bodyRef    = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+
+  // Step indicator refs
+  const step1Ref  = useRef<HTMLDivElement>(null);
+  const step2Ref  = useRef<HTMLDivElement>(null);
+  const step3Ref  = useRef<HTMLDivElement>(null);
+
+  // Glass panel refs
+  const panel1Ref = useRef<HTMLDivElement>(null);
+  const panel2Ref = useRef<HTMLDivElement>(null);
+  const panel3Ref = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      gsap.from(headRef.current, {
-        y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
-        scrollTrigger: { trigger: headRef.current, start: "top 82%" },
+      // ── Initial states ───────────────────────────────────────────────────
+      gsap.set([step2Ref.current,  step3Ref.current],  { opacity: 0.35 });
+      gsap.set([panel2Ref.current, panel3Ref.current], { opacity: 0, y: 24 });
+
+      // ── Scrubbed timeline ────────────────────────────────────────────────
+      // NOTE: no pin:true — sticky CSS handles the viewport lock (avoids Lenis conflicts)
+      // Timeline duration 10; transitions happen at ~2.5-4.5 and ~6.5-8.5
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.5,
+        },
       });
-      gsap.from(bodyRef.current, {
-        y: 50, opacity: 0, duration: 1, ease: "power3.out",
-        scrollTrigger: { trigger: bodyRef.current, start: "top 80%" },
-      });
+
+      // ── Transition 1: Chiropractic → Physical Therapy (25–45%) ──────────
+      tl
+        .to(panel1Ref.current, { opacity: 0, y: -24, duration: 0.8 }, 2.5)
+        .to(step1Ref.current,  { opacity: 0.35, duration: 0.8 },      2.5)
+        .to(panel2Ref.current, { opacity: 1, y: 0, duration: 0.8 },   3.5)
+        .to(step2Ref.current,  { opacity: 1, duration: 0.8 },         3.5)
+
+      // ── Transition 2: Physical Therapy → Regenerative (65–85%) ─────────
+        .to(panel2Ref.current, { opacity: 0, y: -24, duration: 0.8 }, 6.5)
+        .to(step2Ref.current,  { opacity: 0.35, duration: 0.8 },      6.5)
+        .to(panel3Ref.current, { opacity: 1, y: 0, duration: 0.8 },   7.5)
+        .to(step3Ref.current,  { opacity: 1, duration: 0.8 },         7.5);
     },
-    { scope: sectionRef }
+    { scope: containerRef }
   );
+
+  const stepRefs  = [step1Ref,  step2Ref,  step3Ref];
+  const panelRefs = [panel1Ref, panel2Ref, panel3Ref];
 
   return (
     <section
-      id="services"
-      ref={sectionRef}
-      style={{
-        position: "relative",
-        background: "#FFFFFF",
-        padding: "100px 0",
-        overflow: "hidden",
-      }}
+      ref={containerRef}
+      id="integrated-services-section"
+      style={{ height: "300vh", position: "relative", background: "#060C16" }}
     >
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
-        <div className="blob blob-1" style={{ top: "-8%",   right: "-4%", width: 380, height: 380, background: "radial-gradient(circle, #ECE7FF, transparent)", opacity: 0.3 }} />
-        <div className="blob blob-2" style={{ bottom: "-8%", left: "-4%",  width: 340, height: 340, background: "radial-gradient(circle, #E2F9F5, transparent)", opacity: 0.3 }} />
-      </div>
-
-      <div style={{ position: "relative", zIndex: 10, maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
-        {/* Header */}
-        <div ref={headRef} style={{ textAlign: "center", marginBottom: 56 }}>
-          <div
-            style={{
-              marginBottom: 18,
-              fontSize: "0.75rem", fontWeight: 600, color: "#F43F5E",
-              letterSpacing: "0.06em", textTransform: "uppercase",
-              fontFamily: "var(--font-body)",
-            }}
-          >
-            Who We Help
-          </div>
-          <h2
-            style={{
-              fontFamily: "var(--font-heading)",
-              fontSize: "clamp(1.8rem, 3.5vw, 2.9rem)",
-              fontWeight: 700, color: "#0C2340",
-              lineHeight: 1.2, letterSpacing: "-0.02em", marginBottom: 20,
-            }}
-          >
-            Tired of Living With Constant Pain<br />
-            or{" "}
-            <span className="text-gradient-teal">Nerve Symptoms?</span>
-          </h2>
-          <p
-            style={{
-              fontFamily: "var(--font-body)", fontSize: "1.05rem",
-              lineHeight: 1.78, color: "#475569",
-              maxWidth: 680, margin: "0 auto",
-            }}
-          >
-            If back pain, neck pain, joint pain, or nerve symptoms like burning, tingling,
-            or numbness are limiting your life, you are not alone. Many patients come to
-            City Health Services after trying quick fixes or medications that only mask
-            symptoms. Our team focuses on finding the{" "}
-            <strong style={{ color: "#0C2340" }}>underlying cause</strong> of your pain and
-            creating a personalized plan to address it.
-          </p>
+      {/* ── Sticky viewport wrapper ─────────────────────────────────────── */}
+      <div
+        className="sticky top-0 w-full overflow-hidden"
+        style={{ height: "100vh" }}
+      >
+        {/* Background blobs */}
+        <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div className="blob blob-1" style={{ top: "5%",   left: "0%",  width: 500, height: 500, background: "radial-gradient(circle, rgba(8,145,178,0.14), transparent)",    opacity: 0.8 }} />
+          <div className="blob blob-2" style={{ bottom: "5%", right: "0%", width: 450, height: 450, background: "radial-gradient(circle, rgba(139,92,246,0.12), transparent)", opacity: 0.8 }} />
         </div>
 
-        {/* Two-column bullets */}
+        {/* ── Main two-column layout ────────────────────────────────────── */}
         <div
-          ref={bodyRef}
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28 }}
-          className="grid-cols-1 md:grid-cols-2"
+          className="relative z-10 h-full flex items-center mx-auto px-6"
+          style={{ maxWidth: 1180 }}
         >
-          {/* Common problems */}
-          <div
-            className="glass pillar-card"
-            style={{ borderRadius: 24, padding: "36px 32px", position: "relative", overflow: "hidden" }}
-          >
-            <div style={{ position: "absolute", inset: 0, borderRadius: 24, background: "linear-gradient(135deg, #FFE9EC, #FFD1D7)", opacity: 0.2, zIndex: 0 }} />
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(244,63,94,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <HeartCrack size={22} color="#F43F5E" strokeWidth={1.8} />
-                </div>
-                <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.1rem", fontWeight: 600, color: "#0C2340" }}>
-                  Common Problems We Treat
-                </h3>
-              </div>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 11 }}>
-                {PROBLEMS.map((p) => (
-                  <li key={p} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                    <div
-                      style={{
-                        width: 18, height: 18, borderRadius: "50%", marginTop: 2,
-                        background: "rgba(244,63,94,0.1)", border: "1.5px solid rgba(244,63,94,0.25)",
-                        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-                      }}
-                    >
-                      <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#F43F5E" }} />
-                    </div>
-                    <span style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "#374151", lineHeight: 1.55 }}>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          <div className="grid w-full items-center gap-12 md:gap-16" style={{ gridTemplateColumns: "5fr 7fr" }}>
 
-          {/* Feelings + CTA */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <div
-              className="glass pillar-card"
-              style={{ borderRadius: 24, padding: "32px", position: "relative", overflow: "hidden", flex: 1 }}
-            >
-              <div style={{ position: "absolute", inset: 0, borderRadius: 24, background: "linear-gradient(135deg, #ECE7FF, #D3C7FF)", opacity: 0.2, zIndex: 0 }} />
-              <div style={{ position: "relative", zIndex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
-                  <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(139,92,246,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <CircleHelp size={20} color="#8B5CF6" strokeWidth={1.8} />
-                  </div>
-                  <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.1rem", fontWeight: 600, color: "#0C2340" }}>
-                    For Patients Who Feel...
-                  </h3>
-                </div>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 11 }}>
-                  {FEELINGS.map((f) => (
-                    <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                      <div
-                        style={{
-                          width: 18, height: 18, borderRadius: "50%", marginTop: 2,
-                          background: "rgba(139,92,246,0.1)", border: "1.5px solid rgba(139,92,246,0.25)",
-                          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-                        }}
-                      >
-                        <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#8B5CF6" }} />
-                      </div>
-                      <span style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "#374151", lineHeight: 1.55 }}>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div
-              className="glass"
-              style={{
-                borderRadius: 20, padding: "24px 28px",
-                background: "linear-gradient(135deg, rgba(8,145,178,0.06), rgba(20,184,166,0.04))",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-                <Dumbbell size={22} color="#0891B2" strokeWidth={1.8} />
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.95rem", fontWeight: 600, color: "#0C2340" }}>
-                  Ready to find the real cause of your pain?
-                </p>
-              </div>
-              <a
-                href="#contact"
-                className="btn-primary"
+            {/* ── Left: Section label + headline + step indicators ──────── */}
+            <div>
+              {/* Label */}
+              <div
                 style={{
-                  padding: "12px 22px", borderRadius: 12, fontSize: "0.875rem",
-                  boxShadow: "0 6px 20px rgba(8,145,178,0.3)", width: "100%", justifyContent: "center",
+                  marginBottom: 16, fontSize: "0.72rem", fontWeight: 600,
+                  color: "#2dd4bf", letterSpacing: "0.1em",
+                  textTransform: "uppercase" as const, fontFamily: "var(--font-body)",
                 }}
               >
-                Schedule a Consultation to Find the Cause →
-              </a>
+                Integrated Care Model
+              </div>
+
+              {/* Section headline */}
+              <h2
+                style={{
+                  fontFamily: "var(--font-heading)",
+                  fontSize: "clamp(1.8rem, 3vw, 2.6rem)",
+                  fontWeight: 700, lineHeight: 1.18,
+                  color: "#F1F5F9", letterSpacing: "-0.02em",
+                  marginBottom: 12,
+                }}
+              >
+                The Chiropractor-Led{" "}
+                <span className="text-gradient-teal">Advantage</span>
+              </h2>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)", fontSize: "0.95rem",
+                  lineHeight: 1.72, color: "#64748B", marginBottom: 44,
+                  maxWidth: 380,
+                }}
+              >
+                Traditional chiropractors stop at alignment. We use an integrated
+                framework to deliver absolute recovery — without sending you across town.
+              </p>
+
+              {/* Step indicators — left border illuminates with active step */}
+              <div className="space-y-0" style={{ position: "relative" }}>
+                {/* Vertical connecting line */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute", left: 0, top: 12, bottom: 12,
+                    width: 2,
+                    background: "linear-gradient(to bottom, rgba(45,212,191,0.25), rgba(167,139,250,0.2), rgba(34,211,238,0.25))",
+                  }}
+                />
+
+                {STEPS.map((step, i) => (
+                  <div
+                    key={step.id}
+                    id={step.id}
+                    ref={stepRefs[i]}
+                    style={{
+                      paddingLeft: 24,
+                      paddingBottom: i < 2 ? 40 : 0,
+                      position: "relative",
+                      willChange: "opacity",
+                      // active border accent: left border over the connecting line
+                      borderLeft: i === 0 ? `2px solid ${step.accent}` : "2px solid transparent",
+                      marginLeft: 0,
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "0.68rem", fontWeight: 700,
+                        color: step.accent, letterSpacing: "0.14em",
+                        textTransform: "uppercase" as const,
+                        fontFamily: "var(--font-body)", marginBottom: 5,
+                      }}
+                    >
+                      {step.num}
+                    </div>
+                    <h3
+                      style={{
+                        fontFamily: "var(--font-heading)",
+                        fontSize: "1.15rem", fontWeight: 600,
+                        color: "#F1F5F9", lineHeight: 1.3,
+                      }}
+                    >
+                      {step.title}
+                    </h3>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* ── Right: Glassmorphic display frame ─────────────────────── */}
+            {/* pointer-events:none on the container; interactive children opt in with pointer-events:auto */}
+            <div
+              className="relative"
+              style={{ height: 460, pointerEvents: "none" }}
+            >
+              {/* Glass outer shell */}
+              <div
+                className="relative w-full h-full rounded-2xl overflow-hidden"
+                style={{
+                  backdropFilter: "blur(24px)",
+                  WebkitBackdropFilter: "blur(24px)",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  boxShadow: "0 32px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)",
+                }}
+              >
+                {STEPS.map((step, i) => (
+                  <div
+                    key={step.panelId}
+                    id={step.panelId}
+                    ref={panelRefs[i]}
+                    className="absolute inset-0 flex flex-col justify-between"
+                    style={{
+                      padding: "36px 40px",
+                      willChange: "transform, opacity",
+                      // Hidden panels must not block interaction
+                      // Visible panel's CTA uses pointer-events:auto directly
+                    }}
+                  >
+                    {/* Tag */}
+                    <div
+                      style={{
+                        fontSize: "0.68rem", fontWeight: 700,
+                        color: step.accent, letterSpacing: "0.14em",
+                        textTransform: "uppercase" as const,
+                        fontFamily: "var(--font-body)", marginBottom: 14,
+                      }}
+                    >
+                      {step.tag}
+                    </div>
+
+                    {/* Panel title */}
+                    <h3
+                      style={{
+                        fontFamily: "var(--font-heading)",
+                        fontSize: "clamp(1.2rem, 1.8vw, 1.55rem)",
+                        fontWeight: 700, lineHeight: 1.25,
+                        color: "#F1F5F9", marginBottom: 12,
+                      }}
+                    >
+                      {step.panelTitle}
+                    </h3>
+
+                    {/* Body */}
+                    <p
+                      style={{
+                        fontFamily: "var(--font-body)", fontSize: "0.9rem",
+                        lineHeight: 1.7, color: "#94A3B8", marginBottom: 20,
+                      }}
+                    >
+                      {step.panelBody}
+                    </p>
+
+                    {/* Bullets */}
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column" as const, gap: 9, marginBottom: 28 }}>
+                      {step.bullets.map((b) => (
+                        <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                          <div style={{ width: 5, height: 5, borderRadius: "50%", background: step.accent, flexShrink: 0, marginTop: 6 }} />
+                          <span style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "#CBD5E1", lineHeight: 1.5 }}>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Accent gradient strip */}
+                    <div
+                      style={{
+                        height: 64, borderRadius: 12,
+                        background: `linear-gradient(to right, ${step.gradFrom}, transparent)`,
+                        border: `1px solid ${step.borderColor}`,
+                        display: "flex", alignItems: "center", paddingLeft: 20,
+                      }}
+                    >
+                      {/* CTA: explicit pointer-events:auto so it's clickable when visible */}
+                      <a
+                        href="#contact"
+                        className="btn-primary"
+                        style={{
+                          padding: "9px 20px", borderRadius: 10,
+                          fontSize: "0.8rem",
+                          boxShadow: `0 4px 16px ${step.gradFrom}`,
+                          pointerEvents: "auto",
+                        }}
+                      >
+                        Book a Consultation
+                        <ArrowRight size={14} />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

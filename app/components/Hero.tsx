@@ -3,35 +3,33 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Phone, MapPin } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const STATS = [
-  { number: "5,000+", label: "Patients Aligned" },
-  { number: "15 Yrs", label: "Clinical Excellence" },
-  { number: "98%",    label: "Satisfaction Rate" },
+  { number: "Non-Surgical", label: "Pain Relief Solutions" },
+  { number: "Integrated",   label: "Chiro + Medical Care" },
+  { number: "East Valley",  label: "Mesa, AZ Clinic" },
 ];
 
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const subRef    = useRef<HTMLDivElement>(null);
-  const ctaRef    = useRef<HTMLDivElement>(null);
-  const statsRef  = useRef<HTMLDivElement>(null);
-  const graphicRef = useRef<HTMLDivElement>(null);
+  const sectionRef  = useRef<HTMLElement>(null);
+  const headingRef  = useRef<HTMLDivElement>(null);
+  const subRef      = useRef<HTMLDivElement>(null);
+  const ctaRef      = useRef<HTMLDivElement>(null);
+  const statsRef    = useRef<HTMLDivElement>(null);
+  const graphicRef  = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      // Intro reveal
       const tl = gsap.timeline({ delay: 0.15 });
-      tl.from(headingRef.current, { y: 50, opacity: 0, duration: 1,   ease: "power3.out" })
-        .from(subRef.current,    { y: 35, opacity: 0, duration: 0.85, ease: "power3.out" }, "-=0.55")
-        .from(ctaRef.current,   { y: 25, opacity: 0, duration: 0.75, ease: "power3.out" }, "-=0.4")
-        .from(statsRef.current, { y: 20, opacity: 0, duration: 0.65, ease: "power3.out" }, "-=0.4")
+      tl.from(headingRef.current, { y: 50, opacity: 0, duration: 1,    ease: "power3.out" })
+        .from(subRef.current,     { y: 35, opacity: 0, duration: 0.85, ease: "power3.out" }, "-=0.55")
+        .from(ctaRef.current,     { y: 25, opacity: 0, duration: 0.75, ease: "power3.out" }, "-=0.4")
+        .from(statsRef.current,   { y: 20, opacity: 0, duration: 0.65, ease: "power3.out" }, "-=0.4")
         .from(graphicRef.current, { scale: 0.82, opacity: 0, duration: 1.2, ease: "power3.out" }, "-=1.1");
 
-      // Scroll parallax
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
@@ -39,11 +37,11 @@ export default function Hero() {
         scrub: 1,
         onUpdate: (self) => {
           const p = self.progress;
-          gsap.set(headingRef.current, { y: p * -70,  opacity: 1 - p * 1.6 });
-          gsap.set(subRef.current,     { y: p * -45,  opacity: 1 - p * 2   });
-          gsap.set(ctaRef.current,     { y: p * -25,  opacity: 1 - p * 2.5 });
-          gsap.set(statsRef.current,   { y: p * -15,  opacity: 1 - p * 2.5 });
-          gsap.set(graphicRef.current, { scale: 1 + p * 0.25, opacity: 1 - p * 0.6 });
+          gsap.set(headingRef.current,  { y: p * -70,  opacity: 1 - p * 1.6 });
+          gsap.set(subRef.current,      { y: p * -45,  opacity: 1 - p * 2   });
+          gsap.set(ctaRef.current,      { y: p * -25,  opacity: 1 - p * 2.5 });
+          gsap.set(statsRef.current,    { y: p * -15,  opacity: 1 - p * 2.5 });
+          gsap.set(graphicRef.current,  { scale: 1 + p * 0.25, opacity: 1 - p * 0.6 });
         },
       });
     },
@@ -66,19 +64,16 @@ export default function Hero() {
     >
       {/* Blobs */}
       <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
-        <div className="blob blob-1" style={{ top: "8%",  left: "4%",  width: 560, height: 560, background: "radial-gradient(circle, #A7ECD9, #E2F9F5)" }} />
-        <div className="blob blob-2" style={{ top: "15%", right: "6%", width: 440, height: 440, background: "radial-gradient(circle, #D3C7FF, #ECE7FF)" }} />
+        <div className="blob blob-1" style={{ top: "8%",   left: "4%",  width: 560, height: 560, background: "radial-gradient(circle, #A7ECD9, #E2F9F5)" }} />
+        <div className="blob blob-2" style={{ top: "15%",  right: "6%", width: 440, height: 440, background: "radial-gradient(circle, #D3C7FF, #ECE7FF)" }} />
         <div className="blob blob-3" style={{ bottom: "8%", left: "28%", width: 380, height: 380, background: "radial-gradient(circle, #FFD1D7, #FFE9EC)" }} />
       </div>
 
       <div
         style={{
-          position: "relative",
-          zIndex: 10,
-          maxWidth: "1180px",
-          width: "100%",
-          margin: "0 auto",
-          padding: "0 24px",
+          position: "relative", zIndex: 10,
+          maxWidth: 1180, width: "100%",
+          margin: "0 auto", padding: "0 24px",
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: "60px",
@@ -91,109 +86,103 @@ export default function Hero() {
           <div ref={headingRef}>
             <div
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                background: "rgba(8,145,178,0.08)",
-                border: "1px solid rgba(8,145,178,0.2)",
-                borderRadius: "50px",
-                padding: "6px 16px",
-                marginBottom: "22px",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-                color: "#0891B2",
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: "rgba(8,145,178,0.08)", border: "1px solid rgba(8,145,178,0.2)",
+                borderRadius: 50, padding: "6px 16px", marginBottom: 22,
+                fontSize: "0.75rem", fontWeight: 600, color: "#0891B2",
+                letterSpacing: "0.06em", textTransform: "uppercase",
                 fontFamily: "var(--font-body)",
               }}
             >
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0891B2", display: "inline-block" }} />
-              Premium Chiropractic Care
+              Mesa, AZ · East Valley Chiropractic Clinic
             </div>
 
             <h1
               style={{
                 fontFamily: "var(--font-heading)",
-                fontSize: "clamp(2.1rem, 4.5vw, 3.75rem)",
-                fontWeight: 700,
-                lineHeight: 1.13,
-                color: "#0C2340",
-                marginBottom: "0",
-                letterSpacing: "-0.02em",
+                fontSize: "clamp(2rem, 4.2vw, 3.5rem)",
+                fontWeight: 700, lineHeight: 1.13,
+                color: "#0C2340", letterSpacing: "-0.02em",
               }}
             >
-              Where Alignment<br />
-              Meets{" "}
-              <span className="text-gradient-teal">Optimal<br />Performance</span>
+              Chiropractic Care,{" "}
+              <span className="text-gradient-teal">Pain Relief</span>
+              {" "}&amp; Wellness<br />in the East Valley
             </h1>
           </div>
 
-          <div ref={subRef} style={{ marginTop: "24px" }}>
+          <div ref={subRef} style={{ marginTop: 22 }}>
             <p
               style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "1.1rem",
-                lineHeight: 1.78,
-                color: "#475569",
-                maxWidth: "490px",
+                fontFamily: "var(--font-body)", fontSize: "1.05rem",
+                lineHeight: 1.78, color: "#475569", maxWidth: 510,
               }}
             >
-              Experience precision chiropractic care designed to restore your
-              body&apos;s natural balance, eliminate pain, and unlock peak
-              performance — backed by advanced diagnostic imaging and decades of
-              clinical mastery.
+              City Health Services is a chiropractor-led clinic in Mesa offering
+              integrated pain management, neuropathy care, physical therapy,
+              medical weight loss, hormone optimization, and peptide therapy to
+              help you{" "}
+              <strong style={{ color: "#0C2340" }}>
+                move better, feel better, and live better.
+              </strong>
             </p>
           </div>
 
           <div
             ref={ctaRef}
             style={{
-              marginTop: "36px",
-              display: "flex",
-              gap: "16px",
-              alignItems: "center",
-              flexWrap: "wrap",
+              marginTop: 32, display: "flex",
+              gap: 14, alignItems: "center", flexWrap: "wrap",
             }}
           >
             <a
               href="#contact"
               className="btn-primary"
               style={{
-                padding: "15px 32px",
-                borderRadius: "14px",
-                fontSize: "1rem",
+                padding: "14px 28px", borderRadius: 14, fontSize: "0.95rem",
                 boxShadow: "0 8px 26px rgba(8,145,178,0.35)",
               }}
             >
-              Start Your Alignment Journey
-              <ArrowRight size={18} />
+              Request an Evaluation
+              <ArrowRight size={17} />
             </a>
             <a
-              href="#services"
+              href="tel:4806495297"
               style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "0.95rem",
-                fontWeight: 600,
-                color: "#0891B2",
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: "rgba(255,255,255,0.7)",
+                backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.8)",
+                borderRadius: 14, padding: "14px 22px",
+                fontFamily: "var(--font-body)", fontWeight: 700,
+                fontSize: "0.95rem", color: "#0C2340",
                 textDecoration: "none",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                transition: "gap 200ms",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.07)",
+                transition: "all 200ms",
               }}
             >
-              Explore Services <ChevronDown size={16} />
+              <Phone size={16} color="#0891B2" />
+              (480) 649-5297
             </a>
+          </div>
+
+          <div
+            style={{
+              marginTop: 14, display: "flex", alignItems: "flex-start", gap: 6,
+              fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "#94A3B8",
+            }}
+          >
+            <MapPin size={13} color="#0891B2" style={{ flexShrink: 0, marginTop: 2 }} />
+            Serving Mesa, Gilbert, Chandler, Tempe &amp; the East Valley with
+            non-surgical, personalized care
           </div>
 
           <div
             ref={statsRef}
             style={{
-              display: "flex",
-              gap: "32px",
-              marginTop: "48px",
-              paddingTop: "32px",
+              display: "flex", gap: 28,
+              marginTop: 40, paddingTop: 28,
               borderTop: "1px solid rgba(0,0,0,0.06)",
               flexWrap: "wrap",
             }}
@@ -202,23 +191,17 @@ export default function Hero() {
               <div key={s.label}>
                 <div
                   style={{
-                    fontFamily: "var(--font-heading)",
-                    fontSize: "1.8rem",
-                    fontWeight: 700,
-                    color: "#0E7490",
-                    lineHeight: 1.1,
+                    fontFamily: "var(--font-heading)", fontSize: "1.05rem",
+                    fontWeight: 700, color: "#0E7490", lineHeight: 1.2,
                   }}
                 >
                   {s.number}
                 </div>
                 <div
                   style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.78rem",
-                    fontWeight: 500,
-                    color: "#94A3B8",
-                    letterSpacing: "0.04em",
-                    marginTop: "4px",
+                    fontFamily: "var(--font-body)", fontSize: "0.76rem",
+                    fontWeight: 500, color: "#94A3B8",
+                    letterSpacing: "0.03em", marginTop: 3,
                   }}
                 >
                   {s.label}
@@ -234,20 +217,16 @@ export default function Hero() {
           className="hidden md:flex"
           style={{ justifyContent: "center", alignItems: "center", position: "relative" }}
         >
-          <SpinalGraphic />
+          <HeroGraphic />
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="scroll-indicator" style={{ cursor: "pointer" }} aria-hidden="true">
+      <div className="scroll-indicator" aria-hidden="true">
         <span
           style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "0.7rem",
-            fontWeight: 600,
-            color: "#94A3B8",
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
+            fontFamily: "var(--font-body)", fontSize: "0.7rem",
+            fontWeight: 600, color: "#94A3B8",
+            letterSpacing: "0.12em", textTransform: "uppercase",
           }}
         >
           Scroll
@@ -258,131 +237,88 @@ export default function Hero() {
   );
 }
 
-function SpinalGraphic() {
+function HeroGraphic() {
+  const services = [
+    { label: "Chiropractic",        color: "#0891B2" },
+    { label: "Neuropathy Care",     color: "#8B5CF6" },
+    { label: "Physical Therapy",    color: "#14B8A6" },
+    { label: "Weight Loss",         color: "#F43F5E" },
+    { label: "Hormones & Peptides", color: "#EA580C" },
+    { label: "Pain Management",     color: "#0891B2" },
+  ];
+
   return (
-    <div style={{ position: "relative", width: 420, height: 440 }}>
-      {/* Outer spin ring */}
+    <div style={{ position: "relative", width: 400, height: 440 }}>
       <div
         className="spin-ring"
         style={{
-          position: "absolute",
-          inset: -24,
-          borderRadius: "50%",
-          background:
-            "conic-gradient(from 0deg, transparent 0%, rgba(8,145,178,0.12) 20%, transparent 40%, rgba(139,92,246,0.12) 60%, transparent 80%)",
+          position: "absolute", inset: -24, borderRadius: "50%",
+          background: "conic-gradient(from 0deg, transparent 0%, rgba(8,145,178,0.1) 20%, transparent 40%, rgba(139,92,246,0.1) 60%, transparent 80%)",
         }}
       />
+      <div className="glass glow-card" style={{ position: "absolute", inset: "30px", borderRadius: "50%" }} />
 
-      {/* Main glass orb */}
+      {/* Center text */}
       <div
-        className="glass glow-card"
         style={{
-          position: "absolute",
-          inset: "30px",
-          borderRadius: "50%",
-        }}
-      />
-
-      {/* SVG Spine */}
-      <svg
-        viewBox="0 0 200 300"
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
+          position: "absolute", top: "50%", left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 155,
-          height: 250,
+          textAlign: "center", zIndex: 2,
         }}
       >
-        <defs>
-          <linearGradient id="spineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%"   stopColor="#0891B2" />
-            <stop offset="50%"  stopColor="#14B8A6" />
-            <stop offset="100%" stopColor="#8B5CF6" />
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="2" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* Flow lines */}
-        <path d="M 55,15 Q 30,150 55,285" stroke="url(#spineGrad)" strokeWidth={1.2} fill="none" strokeDasharray="5,5" opacity={0.4} />
-        <path d="M 145,15 Q 170,150 145,285" stroke="url(#spineGrad)" strokeWidth={1.2} fill="none" strokeDasharray="5,5" opacity={0.4} />
-
-        {/* Vertebrae */}
-        {Array.from({ length: 10 }, (_, i) => {
-          const y  = 18 + i * 26;
-          const ox = Math.sin(i * 0.55) * 7;
-          const w  = 52 - i * 1.2;
-          return (
-            <g key={i} filter="url(#glow)">
-              <rect
-                x={100 - w / 2 + ox}
-                y={y}
-                width={w}
-                height={18}
-                rx={6}
-                fill={`rgba(8,145,178,${0.1 + i * 0.04})`}
-                stroke="url(#spineGrad)"
-                strokeWidth={1.5}
-              />
-              {i < 9 && (
-                <ellipse
-                  cx={100 + ox}
-                  cy={y + 20}
-                  rx={w / 2 - 5}
-                  ry={3}
-                  fill="rgba(20,184,166,0.25)"
-                />
-              )}
-            </g>
-          );
-        })}
-      </svg>
-
-      {/* Floating stat: Alignment Score */}
-      <div
-        className="glass"
-        style={{
-          position: "absolute",
-          top: "14%",
-          right: "-18px",
-          borderRadius: "14px",
-          padding: "12px 16px",
-          minWidth: 130,
-        }}
-      >
-        <div style={{ fontFamily: "var(--font-body)", fontSize: "0.68rem", fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          Alignment Score
+        <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.95rem", fontWeight: 700, color: "#0C2340", lineHeight: 1.25 }}>
+          Whole-Body
         </div>
-        <div style={{ fontFamily: "var(--font-heading)", fontSize: "1.45rem", fontWeight: 700, color: "#0891B2", marginTop: 2 }}>
-          98.5%
+        <div className="text-gradient-teal" style={{ fontFamily: "var(--font-heading)", fontSize: "1.05rem", fontWeight: 700 }}>
+          Wellness
+        </div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", color: "#94A3B8", marginTop: 4 }}>
+          City Health Services
         </div>
       </div>
 
-      {/* Floating stat: Pain Relief */}
+      {/* Service pills orbiting */}
+      {services.map((s, i) => {
+        const angle = (i / services.length) * 2 * Math.PI - Math.PI / 2;
+        const rx = 172, ry = 152;
+        const cx = 200 + rx * Math.cos(angle);
+        const cy = 220 + ry * Math.sin(angle);
+        return (
+          <div
+            key={s.label}
+            className="glass"
+            style={{
+              position: "absolute",
+              left: cx, top: cy,
+              transform: "translate(-50%, -50%)",
+              borderRadius: 50, padding: "5px 12px",
+              fontSize: "0.68rem", fontWeight: 700,
+              color: s.color, whiteSpace: "nowrap",
+              fontFamily: "var(--font-body)",
+              border: `1px solid ${s.color}30`,
+            }}
+          >
+            {s.label}
+          </div>
+        );
+      })}
+
+      {/* Address card */}
       <div
         className="glass"
         style={{
-          position: "absolute",
-          bottom: "18%",
-          left: "-18px",
-          borderRadius: "14px",
-          padding: "12px 16px",
-          minWidth: 122,
+          position: "absolute", bottom: "9%", right: "-16px",
+          borderRadius: 14, padding: "12px 16px", minWidth: 130,
         }}
       >
-        <div style={{ fontFamily: "var(--font-body)", fontSize: "0.68rem", fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-          Pain Relief
+        <div style={{ fontFamily: "var(--font-body)", fontSize: "0.62rem", fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          Mesa Clinic
         </div>
-        <div style={{ fontFamily: "var(--font-heading)", fontSize: "1.45rem", fontWeight: 700, color: "#14B8A6", marginTop: 2 }}>
-          97%
+        <div style={{ fontFamily: "var(--font-heading)", fontSize: "0.88rem", fontWeight: 700, color: "#0891B2", marginTop: 2, lineHeight: 1.3 }}>
+          1303 S Longmore #8
+        </div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", color: "#94A3B8", marginTop: 1 }}>
+          Mesa, AZ 85202
         </div>
       </div>
     </div>

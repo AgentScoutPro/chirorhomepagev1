@@ -1,75 +1,73 @@
 "use client";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Check, Star } from "lucide-react";
+import { Stethoscope, Zap, Activity, PersonStanding, Scale, FlaskConical } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const PLANS = [
+const SERVICES = [
   {
-    id: "maintenance",
-    label: "Maintenance",
-    price: "$89",
-    period: "/visit",
-    tagline: "Keep your alignment tuned.",
+    icon: Stethoscope,
+    title: "Chiropractic Care",
+    desc: "Precise spinal and joint adjustments to relieve pain, reduce nerve irritation, and support better movement.",
     color: "#0891B2",
-    accent: "rgba(8,145,178,0.08)",
-    border: "rgba(8,145,178,0.2)",
-    features: [
-      "Full spinal assessment",
-      "Targeted chiropractic adjustment",
-      "Postural analysis",
-      "Home exercise guidance",
-      "Progress tracking dashboard",
-      "Priority scheduling",
-    ],
+    bg: "linear-gradient(135deg, #E2F9F5, #B2F5EA)",
+    accent: "rgba(8,145,178,0.12)",
+    link: "Learn more about chiropractic care",
   },
   {
-    id: "chiro-pt",
-    label: "Chiro + PT",
-    price: "$189",
-    period: "/session",
-    tagline: "Rehab meets precision alignment.",
+    icon: Zap,
+    title: "Neuropathy & Nerve Pain",
+    desc: "Advanced therapies and nerve-focused care for peripheral neuropathy — helping reduce burning, tingling, and numbness in feet or hands.",
     color: "#8B5CF6",
-    accent: "rgba(139,92,246,0.08)",
-    border: "rgba(139,92,246,0.25)",
-    popular: true,
-    features: [
-      "Everything in Maintenance",
-      "Physical therapy integration",
-      "Soft tissue mobilization",
-      "Corrective exercise program",
-      "Digital scan + imaging",
-      "Monthly performance review",
-    ],
+    bg: "linear-gradient(135deg, #ECE7FF, #DDD6FE)",
+    accent: "rgba(139,92,246,0.12)",
+    link: "Learn more about neuropathy treatment",
   },
   {
-    id: "elite",
-    label: "Elite Performance",
-    price: "$349",
-    period: "/month",
-    tagline: "The complete performance protocol.",
-    color: "#0891B2",
-    accent: "rgba(8,145,178,0.08)",
-    border: "rgba(8,145,178,0.2)",
-    features: [
-      "Everything in Chiro + PT",
-      "Unlimited monthly visits",
-      "Neuromuscular biofeedback",
-      "Spinal decompression access",
-      "24/7 telehealth support",
-      "Personalized care concierge",
-    ],
+    icon: Activity,
+    title: "Pain Management & Rehab",
+    desc: "Non-surgical pain management combined with rehab, corrective exercises, and therapy to restore strength, stability, and function.",
+    color: "#F43F5E",
+    bg: "linear-gradient(135deg, #FFE9EC, #FECDD3)",
+    accent: "rgba(244,63,94,0.12)",
+    link: "Learn more about pain management & rehab",
+  },
+  {
+    icon: PersonStanding,
+    title: "Physical Therapy & Injury Recovery",
+    desc: "Customized therapy programs after injuries, accidents, or surgery to help you return to daily activities safely and confidently.",
+    color: "#EA580C",
+    bg: "linear-gradient(135deg, #FFF7ED, #FED7AA)",
+    accent: "rgba(234,88,12,0.12)",
+    link: "Learn more about physical therapy",
+  },
+  {
+    icon: Scale,
+    title: "Medical Weight Loss",
+    desc: "Physician-guided weight loss plans designed to improve energy, support joint health, and enhance overall wellness.",
+    color: "#14B8A6",
+    bg: "linear-gradient(135deg, #CCFBF1, #99F6E4)",
+    accent: "rgba(20,184,166,0.12)",
+    link: "Learn more about weight loss programs",
+  },
+  {
+    icon: FlaskConical,
+    title: "Hormone & Peptide Therapy",
+    desc: "Personalized hormone and peptide protocols to support better sleep, energy, body composition, recovery, and performance.",
+    color: "#8B5CF6",
+    bg: "linear-gradient(135deg, #ECE7FF, #C4B5FD)",
+    accent: "rgba(139,92,246,0.12)",
+    link: "Learn more about hormone & peptide therapy",
   },
 ];
 
 export default function Pricing() {
-  const [active, setActive] = useState("chiro-pt");
   const sectionRef = useRef<HTMLElement>(null);
   const headRef    = useRef<HTMLDivElement>(null);
-  const cardRef    = useRef<HTMLDivElement>(null);
+  const cardsRef   = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -77,15 +75,15 @@ export default function Pricing() {
         y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
         scrollTrigger: { trigger: headRef.current, start: "top 82%" },
       });
-      gsap.from(cardRef.current, {
-        y: 50, opacity: 0, duration: 1, ease: "power3.out",
-        scrollTrigger: { trigger: cardRef.current, start: "top 78%" },
-      });
+      if (cardsRef.current) {
+        gsap.from(cardsRef.current.children, {
+          y: 50, opacity: 0, duration: 0.75, stagger: 0.12, ease: "power3.out",
+          scrollTrigger: { trigger: cardsRef.current, start: "top 78%" },
+        });
+      }
     },
     { scope: sectionRef }
   );
-
-  const plan = PLANS.find((p) => p.id === active)!;
 
   return (
     <section
@@ -94,193 +92,128 @@ export default function Pricing() {
       style={{
         position: "relative",
         background: "linear-gradient(180deg, #0A0E1A 0%, #0D1320 8%, #F0F9FF 15%, #FFFFFF 100%)",
-        padding: "100px 0",
+        padding: "100px 0 110px",
         overflow: "hidden",
       }}
     >
-      {/* Background blobs */}
       <div style={{ position: "absolute", inset: "15% 0 0", overflow: "hidden", zIndex: 0 }}>
         <div className="blob blob-1" style={{ top: "5%",  right: "5%", width: 420, height: 420, background: "radial-gradient(circle, #ECE7FF, #F8F4FF)", opacity: 0.4 }} />
         <div className="blob blob-3" style={{ bottom: "5%", left: "3%", width: 380, height: 380, background: "radial-gradient(circle, #E2F9F5, #F0FDF8)", opacity: 0.4 }} />
       </div>
 
-      <div style={{ position: "relative", zIndex: 10, maxWidth: 820, margin: "0 auto", padding: "0 24px" }}>
+      <div style={{ position: "relative", zIndex: 10, maxWidth: 1180, margin: "0 auto", padding: "0 24px" }}>
         {/* Header */}
-        <div ref={headRef} style={{ textAlign: "center", marginBottom: 52 }}>
+        <div ref={headRef} style={{ textAlign: "center", marginBottom: 60 }}>
           <div
             style={{
               display: "inline-flex", alignItems: "center", gap: 8,
-              background: "rgba(8,145,178,0.07)",
-              border: "1px solid rgba(8,145,178,0.18)",
+              background: "rgba(8,145,178,0.07)", border: "1px solid rgba(8,145,178,0.18)",
               borderRadius: 50, padding: "6px 16px", marginBottom: 18,
               fontSize: "0.75rem", fontWeight: 600, color: "#0891B2",
               letterSpacing: "0.06em", textTransform: "uppercase",
               fontFamily: "var(--font-body)",
             }}
           >
-            Care Plans & Packages
+            Our Services
           </div>
           <h2
             style={{
               fontFamily: "var(--font-heading)",
-              fontSize: "clamp(1.9rem, 3.5vw, 3rem)",
+              fontSize: "clamp(1.8rem, 3.5vw, 2.9rem)",
               fontWeight: 700, color: "#0C2340",
-              lineHeight: 1.2, letterSpacing: "-0.02em", marginBottom: 14,
+              lineHeight: 1.2, letterSpacing: "-0.02em", marginBottom: 16,
             }}
           >
-            Your Journey,{" "}
-            <span className="text-gradient-teal">Your Plan</span>
+            Services Designed for{" "}
+            <span className="text-gradient-teal">Long-Term Relief</span>
+            <br />and Wellness
           </h2>
           <p
             style={{
               fontFamily: "var(--font-body)", fontSize: "1.05rem",
-              lineHeight: 1.75, color: "#64748B", maxWidth: 480, margin: "0 auto",
+              lineHeight: 1.75, color: "#64748B",
+              maxWidth: 560, margin: "0 auto",
             }}
           >
-            From routine maintenance to elite performance optimization — choose the
-            level of care that matches your goals.
+            Your care plan may include one or several of these services, combined to
+            match your specific condition, goals, and lifestyle.
           </p>
         </div>
 
-        {/* Tab selector */}
+        {/* Services grid */}
         <div
-          className="glass"
+          ref={cardsRef}
           style={{
-            display: "flex", gap: 4, padding: 6, borderRadius: 18,
-            marginBottom: 36, width: "fit-content", margin: "0 auto 36px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: 22, marginBottom: 48,
           }}
         >
-          {PLANS.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setActive(p.id)}
-              className={`pricing-tab${active === p.id ? " active" : ""}`}
-              aria-selected={active === p.id}
-              role="tab"
-            >
-              {p.label}
-              {p.popular && active !== p.id && (
-                <span
-                  style={{
-                    marginLeft: 6, fontSize: "0.65rem", fontWeight: 700,
-                    color: "#8B5CF6", background: "rgba(139,92,246,0.1)",
-                    borderRadius: 50, padding: "2px 7px",
-                  }}
-                >
-                  Popular
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Plan card */}
-        <div
-          ref={cardRef}
-          className="glass"
-          key={plan.id}
-          style={{
-            borderRadius: 28, padding: "40px 44px",
-            border: `1px solid ${plan.border}`,
-            position: "relative", overflow: "hidden",
-          }}
-        >
-          {plan.popular && (
-            <div
-              style={{
-                position: "absolute", top: 20, right: 20,
-                background: "linear-gradient(135deg, #8B5CF6, #A78BFA)",
-                color: "white", borderRadius: 50, padding: "4px 14px",
-                fontSize: "0.75rem", fontWeight: 700,
-                display: "flex", alignItems: "center", gap: 5,
-              }}
-            >
-              <Star size={12} fill="white" /> Most Popular
-            </div>
-          )}
-
-          {/* Mesh tint */}
-          <div
-            style={{
-              position: "absolute", inset: 0, borderRadius: 28,
-              background: plan.accent, pointerEvents: "none",
-            }}
-          />
-
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 28 }}>
-              <div>
-                <h3
-                  style={{
-                    fontFamily: "var(--font-heading)", fontSize: "1.5rem",
-                    fontWeight: 700, color: "#0C2340", marginBottom: 6,
-                  }}
-                >
-                  {plan.label}
-                </h3>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.95rem", color: "#64748B" }}>
-                  {plan.tagline}
-                </p>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <span
-                  style={{
-                    fontFamily: "var(--font-heading)", fontSize: "2.8rem",
-                    fontWeight: 700, color: plan.color, lineHeight: 1,
-                  }}
-                >
-                  {plan.price}
-                </span>
-                <span style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "#94A3B8", marginLeft: 4 }}>
-                  {plan.period}
-                </span>
-              </div>
-            </div>
-
-            {/* Feature list */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                gap: "12px 24px",
-                marginBottom: 32,
-              }}
-            >
-              {plan.features.map((f) => (
-                <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+          {SERVICES.map((s) => {
+            const Icon = s.icon;
+            return (
+              <div
+                key={s.title}
+                className="glass pillar-card"
+                style={{ borderRadius: 22, padding: "30px 26px", position: "relative", overflow: "hidden" }}
+              >
+                <div style={{ position: "absolute", inset: 0, borderRadius: 22, background: s.bg, opacity: 0.22, zIndex: 0 }} />
+                <div style={{ position: "relative", zIndex: 1 }}>
                   <div
                     style={{
-                      width: 20, height: 20, borderRadius: "50%",
-                      background: plan.accent, border: `1.5px solid ${plan.border}`,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      flexShrink: 0, marginTop: 1,
+                      width: 50, height: 50, borderRadius: 14,
+                      background: s.accent, display: "flex",
+                      alignItems: "center", justifyContent: "center", marginBottom: 18,
                     }}
                   >
-                    <Check size={11} color={plan.color} strokeWidth={2.5} />
+                    <Icon size={26} color={s.color} strokeWidth={1.8} />
                   </div>
-                  <span style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "#374151", lineHeight: 1.5 }}>
-                    {f}
-                  </span>
+                  <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.1rem", fontWeight: 600, color: "#0C2340", marginBottom: 10, lineHeight: 1.3 }}>
+                    {s.title}
+                  </h3>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", lineHeight: 1.7, color: "#475569", marginBottom: 16 }}>
+                    {s.desc}
+                  </p>
+                  <a
+                    href="#contact"
+                    style={{
+                      fontFamily: "var(--font-body)", fontSize: "0.82rem",
+                      fontWeight: 600, color: s.color,
+                      textDecoration: "none", cursor: "pointer",
+                      display: "flex", alignItems: "center", gap: 5,
+                    }}
+                  >
+                    {s.link} →
+                  </a>
                 </div>
-              ))}
-            </div>
+              </div>
+            );
+          })}
+        </div>
 
-            <a
-              href="#contact"
-              className="btn-primary"
-              style={{
-                padding: "14px 32px", borderRadius: 14,
-                fontSize: "0.95rem",
-                boxShadow: `0 8px 24px ${plan.accent.replace("0.08", "0.35")}`,
-                background:
-                  plan.id === "chiro-pt"
-                    ? "linear-gradient(135deg, #8B5CF6, #A78BFA)"
-                    : "linear-gradient(135deg, #0891B2, #14B8A6)",
-              }}
-            >
-              Get Started with {plan.label} →
-            </a>
-          </div>
+        {/* Section CTAs */}
+        <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+          <a
+            href="#contact"
+            className="btn-primary"
+            style={{ padding: "14px 32px", borderRadius: 14, fontSize: "0.95rem", boxShadow: "0 8px 24px rgba(8,145,178,0.35)" }}
+          >
+            View All Services →
+          </a>
+          <a
+            href="#start"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              padding: "14px 28px", borderRadius: 14,
+              fontFamily: "var(--font-body)", fontWeight: 600, fontSize: "0.95rem",
+              color: "#0891B2", background: "rgba(8,145,178,0.07)",
+              border: "1px solid rgba(8,145,178,0.2)",
+              textDecoration: "none", cursor: "pointer",
+              transition: "all 200ms",
+            }}
+          >
+            Request an Appointment
+          </a>
         </div>
       </div>
     </section>

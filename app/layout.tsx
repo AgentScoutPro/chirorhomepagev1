@@ -17,15 +17,16 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "ChiroR — Where Alignment Meets Optimal Performance",
+  title: "City Health Services — Chiropractic Care, Pain Relief & Wellness in Mesa, AZ",
   description:
-    "Premium chiropractic care backed by state-of-the-art diagnostic technology. Precision adjustments, decompression therapy, and elite wellness plans.",
+    "Chiropractor-led clinic in Mesa, AZ offering integrated pain management, neuropathy care, physical therapy, medical weight loss, hormone optimization, and peptide therapy. Serving Mesa, Gilbert, Chandler, Tempe, and the East Valley.",
   keywords: [
-    "chiropractic",
-    "spinal alignment",
-    "decompression therapy",
-    "neurological care",
-    "wellness",
+    "chiropractor Mesa AZ",
+    "neuropathy treatment Mesa",
+    "pain management clinic Mesa",
+    "physical therapy East Valley",
+    "medical weight loss Mesa",
+    "hormone therapy peptide therapy AZ",
   ],
 };
 

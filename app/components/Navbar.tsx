@@ -55,8 +55,7 @@ export default function Navbar() {
             letterSpacing: "-0.02em",
           }}
         >
-          Chiro
-          <span className="text-gradient-teal">R</span>
+          City Health<span className="text-gradient-teal"> Services</span>
         </a>
 
         {/* Desktop links */}

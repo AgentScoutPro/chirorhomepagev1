@@ -1,16 +1,22 @@
 "use client";
-import { MapPin, Phone, Mail, Clock, Globe, Link, Hash, ExternalLink } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Globe, Hash, ArrowRight, ExternalLink } from "lucide-react";
 
 const LINKS = {
-  Services: ["Precision Adjustments", "Decompression Therapy", "Neurological Care", "Active Recovery", "Pediatric Chiropractic"],
-  Company:  ["About Us", "Our Team", "Testimonials", "Blog", "Careers"],
-  Support:  ["FAQ", "Insurance & Billing", "Patient Portal", "Accessibility", "Privacy Policy"],
+  Services: [
+    "Chiropractic Care",
+    "Neuropathy Treatment",
+    "Pain Management & Rehab",
+    "Physical Therapy",
+    "Medical Weight Loss",
+    "Hormone & Peptide Therapy",
+  ],
+  Company: ["About Us", "Our Team", "Patient Testimonials", "Blog & Resources", "Careers"],
+  Support: ["FAQ", "Insurance & Billing", "Patient Portal", "Accessibility", "Privacy Policy"],
 };
 
 const SOCIAL = [
   { icon: Hash,         label: "Instagram", href: "#" },
   { icon: Globe,        label: "Facebook",  href: "#" },
-  { icon: Link,         label: "Twitter / X", href: "#" },
   { icon: ExternalLink, label: "YouTube",   href: "#" },
 ];
 
@@ -30,47 +36,91 @@ export default function Footer() {
         <div className="blob blob-2" style={{ top: "-10%", right: "5%",  width: 400, height: 400, background: "radial-gradient(circle, rgba(139,92,246,0.1), transparent)", opacity: 0.5 }} />
       </div>
 
-      <div style={{ position: "relative", zIndex: 10, maxWidth: 1180, margin: "0 auto", padding: "80px 24px 0" }}>
+      {/* Local SEO band */}
+      <div
+        style={{
+          position: "relative", zIndex: 10,
+          background: "rgba(8,145,178,0.06)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          padding: "48px 24px",
+        }}
+      >
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
+          <div style={{ maxWidth: 620 }}>
+            <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "1.35rem", fontWeight: 700, color: "#E2E8F0", marginBottom: 12 }}>
+              Your Mesa Chiropractic &amp; Wellness Clinic
+            </h2>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", lineHeight: 1.78, color: "#64748B" }}>
+              City Health Services proudly serves Mesa, Gilbert, Chandler, Tempe, and surrounding East Valley
+              communities. If you&apos;re searching for a chiropractor near you, neuropathy treatment in Mesa,
+              or a pain management clinic that also offers physical therapy, medical weight loss, hormone
+              therapy, and peptide therapy — our team is ready to help.
+            </p>
+          </div>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <a
+              href="https://maps.google.com/?q=1303+S+Longmore+8+Mesa+AZ+85202"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                padding: "11px 20px", borderRadius: 12,
+                fontFamily: "var(--font-body)", fontWeight: 600, fontSize: "0.875rem",
+                color: "#00D4B8", background: "rgba(0,212,184,0.1)",
+                border: "1px solid rgba(0,212,184,0.2)",
+                textDecoration: "none", transition: "all 200ms",
+              }}
+            >
+              <MapPin size={15} /> Get Directions
+            </a>
+            <a
+              href="#contact"
+              className="btn-primary"
+              style={{ padding: "11px 22px", borderRadius: 12, fontSize: "0.875rem", boxShadow: "0 4px 16px rgba(8,145,178,0.3)" }}
+            >
+              Contact Us <ArrowRight size={14} />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ position: "relative", zIndex: 10, maxWidth: 1100, margin: "0 auto", padding: "68px 24px 0" }}>
         {/* Top row */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "2fr 1fr 1fr 1fr",
-            gap: 48,
-            paddingBottom: 56,
+            gap: 44,
+            paddingBottom: 48,
             borderBottom: "1px solid rgba(255,255,255,0.08)",
           }}
           className="grid-cols-1 md:grid-cols-4"
         >
-          {/* Brand column */}
+          {/* Brand */}
           <div>
             <a
               href="#"
               style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: "1.8rem", fontWeight: 700,
-                color: "#F1F5F9", textDecoration: "none",
-                letterSpacing: "-0.02em", display: "inline-block",
-                marginBottom: 16,
+                fontFamily: "var(--font-heading)", fontSize: "1.6rem", fontWeight: 700,
+                color: "#F1F5F9", textDecoration: "none", letterSpacing: "-0.02em",
+                display: "inline-block", marginBottom: 14,
               }}
             >
-              Chiro<span className="text-gradient-teal">R</span>
+              City Health<span className="text-gradient-teal"> Services</span>
             </a>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", lineHeight: 1.75, color: "#64748B", maxWidth: 280, marginBottom: 24 }}>
-              Where alignment meets optimal performance. Precision chiropractic care for those who demand the best from their bodies.
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", lineHeight: 1.75, color: "#64748B", maxWidth: 280, marginBottom: 22 }}>
+              Chiropractor-led care for pain, neuropathy, and whole-body wellness in Mesa and the East Valley.
             </p>
-
-            {/* Contact details */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[
-                { icon: MapPin, text: "8420 E Shea Blvd, Scottsdale, AZ 85260" },
-                { icon: Phone, text: "(480) 555-0192" },
-                { icon: Mail,  text: "hello@chiror.com" },
-                { icon: Clock, text: "Mon–Sat: 7am – 7pm" },
+                { icon: MapPin, text: "1303 S Longmore #8, Mesa, AZ 85202" },
+                { icon: Phone,  text: "(480) 649-5297" },
+                { icon: Mail,   text: "info@cityhealthservices.com" },
+                { icon: Clock,  text: "Mon–Sat: 8am – 6pm" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <Icon size={15} color="#0891B2" style={{ flexShrink: 0, marginTop: 2 }} />
-                  <span style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", lineHeight: 1.55, color: "#64748B" }}>{text}</span>
+                  <Icon size={14} color="#0891B2" style={{ flexShrink: 0, marginTop: 3 }} />
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "0.82rem", lineHeight: 1.6, color: "#64748B" }}>{text}</span>
                 </div>
               ))}
             </div>
@@ -79,20 +129,15 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(LINKS).map(([heading, items]) => (
             <div key={heading}>
-              <h4 style={{ fontFamily: "var(--font-heading)", fontSize: "1rem", fontWeight: 600, color: "#E2E8F0", marginBottom: 20, letterSpacing: "0.01em" }}>
+              <h4 style={{ fontFamily: "var(--font-heading)", fontSize: "0.95rem", fontWeight: 600, color: "#E2E8F0", marginBottom: 18 }}>
                 {heading}
               </h4>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 11 }}>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                 {items.map((item) => (
                   <li key={item}>
                     <a
                       href="#"
-                      style={{
-                        fontFamily: "var(--font-body)", fontSize: "0.875rem",
-                        color: "#64748B", textDecoration: "none",
-                        transition: "color 200ms",
-                        cursor: "pointer",
-                      }}
+                      style={{ fontFamily: "var(--font-body)", fontSize: "0.84rem", color: "#64748B", textDecoration: "none", transition: "color 200ms", cursor: "pointer" }}
                       onMouseEnter={(e) => (e.currentTarget.style.color = "#A7ECD9")}
                       onMouseLeave={(e) => (e.currentTarget.style.color = "#64748B")}
                     >
@@ -108,21 +153,18 @@ export default function Footer() {
         {/* Newsletter */}
         <div
           style={{
-            padding: "40px 0",
+            padding: "34px 0",
             borderBottom: "1px solid rgba(255,255,255,0.08)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 24,
+            display: "flex", alignItems: "center",
+            justifyContent: "space-between", flexWrap: "wrap", gap: 22,
           }}
         >
           <div>
-            <h4 style={{ fontFamily: "var(--font-heading)", fontSize: "1.15rem", fontWeight: 600, color: "#E2E8F0", marginBottom: 6 }}>
-              Wellness Insights, Delivered Weekly
+            <h4 style={{ fontFamily: "var(--font-heading)", fontSize: "1.05rem", fontWeight: 600, color: "#E2E8F0", marginBottom: 6 }}>
+              Wellness Insights, Delivered Free
             </h4>
             <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", color: "#64748B" }}>
-              Evidence-based spinal health tips and exclusive patient resources.
+              Evidence-based pain relief tips and health resources for East Valley patients.
             </p>
           </div>
           <form
@@ -131,28 +173,19 @@ export default function Footer() {
             aria-label="Newsletter signup"
           >
             <input
-              type="email"
-              placeholder="your@email.com"
-              aria-label="Email address"
+              type="email" placeholder="your@email.com" aria-label="Email address"
               style={{
                 fontFamily: "var(--font-body)", fontSize: "0.9rem",
                 padding: "11px 18px", borderRadius: 12,
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                color: "#E2E8F0", outline: "none",
-                minWidth: 220,
+                background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
+                color: "#E2E8F0", outline: "none", minWidth: 220,
               }}
               onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(8,145,178,0.5)")}
               onBlur={(e)  => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)")}
             />
             <button
-              type="submit"
-              className="btn-primary"
-              style={{
-                padding: "11px 24px", borderRadius: 12,
-                fontSize: "0.875rem",
-                boxShadow: "0 6px 20px rgba(8,145,178,0.3)",
-              }}
+              type="submit" className="btn-primary"
+              style={{ padding: "11px 22px", borderRadius: 12, fontSize: "0.875rem", boxShadow: "0 6px 20px rgba(8,145,178,0.3)" }}
             >
               Subscribe
             </button>
@@ -162,42 +195,29 @@ export default function Footer() {
         {/* Bottom bar */}
         <div
           style={{
-            padding: "28px 0",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 16,
+            padding: "24px 0",
+            display: "flex", alignItems: "center",
+            justifyContent: "space-between", flexWrap: "wrap", gap: 12,
           }}
         >
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.82rem", color: "#475569" }}>
-            © {new Date().getFullYear()} ChiroR. All rights reserved. &nbsp;·&nbsp; Not a substitute for professional medical advice.
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "#475569" }}>
+            © {new Date().getFullYear()} City Health Services · 1303 S Longmore #8, Mesa, AZ 85202 ·
+            (480) 649-5297 &nbsp;·&nbsp; Not a substitute for professional medical advice.
           </p>
-
-          {/* Social icons */}
-          <div style={{ display: "flex", gap: 12 }}>
+          <div style={{ display: "flex", gap: 10 }}>
             {SOCIAL.map(({ icon: Icon, label, href }) => (
               <a
-                key={label}
-                href={href}
-                aria-label={label}
+                key={label} href={href} aria-label={label}
                 style={{
-                  width: 38, height: 38, borderRadius: "50%",
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  width: 36, height: 36, borderRadius: "50%",
+                  background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   transition: "all 200ms", cursor: "pointer",
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(8,145,178,0.2)";
-                  e.currentTarget.style.borderColor = "rgba(8,145,178,0.4)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(8,145,178,0.2)"; e.currentTarget.style.borderColor = "rgba(8,145,178,0.4)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; }}
               >
-                <Icon size={16} color="#94A3B8" />
+                <Icon size={15} color="#94A3B8" />
               </a>
             ))}
           </div>

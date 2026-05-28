@@ -3,283 +3,363 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { CalendarCheck, ClipboardList, LayoutList, Phone } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+// ─── Step data ────────────────────────────────────────────────────────────────
 const STEPS = [
   {
-    step: "01",
-    icon: CalendarCheck,
-    title: "Schedule Your Visit",
-    desc: "Call our Mesa clinic or request an appointment online at a time that works for you. Our friendly staff makes scheduling straightforward.",
-    color: "#0891B2",
-    bg: "linear-gradient(135deg, #E2F9F5, #B2F5EA)",
+    num:   "01",
+    title: "Schedule Your Comprehensive Evaluation",
+    body:  "We replace clinical guesswork with precision metric data mapping to find the true root of your pain loop.",
+    image: "/journey-1-evaluation.jpeg",
+    alt:   "Patient receiving a comprehensive digital spinal evaluation",
+    accent: "#2dd4bf",
   },
   {
-    step: "02",
-    icon: ClipboardList,
-    title: "Get a Complete Evaluation",
-    desc: "Your provider listens to your concerns, reviews your history, performs a detailed exam, and explains what is driving your pain or symptoms.",
-    color: "#8B5CF6",
-    bg: "linear-gradient(135deg, #ECE7FF, #DDD6FE)",
+    num:   "02",
+    title: "Receive Your Multi-Specialty Blueprint",
+    body:  "Our chiropractor-led medical team designs a customized, integrated plan combining structural alignment, physical rehab, and advanced cellular support under one roof.",
+    image: "/journey-2-blueprint.jpeg",
+    alt:   "Personalized multi-specialty treatment blueprint",
+    accent: "#a78bfa",
   },
   {
-    step: "03",
-    icon: LayoutList,
-    title: "Follow Your Personalized Plan",
-    desc: "Receive a clear plan that may include chiropractic care, rehab, neuropathy therapies, medical weight loss, hormones, or peptide therapy — built around your goals.",
-    color: "#14B8A6",
-    bg: "linear-gradient(135deg, #CCFBF1, #99F6E4)",
+    num:   "03",
+    title: "Reclaim Your Unbound Freedom",
+    body:  "Walk out of the cycle of temporary medication fixes and live a vibrant, high-performance, pain-free life.",
+    image: "/journey-3-result.jpeg",
+    alt:   "Patient living a vibrant, pain-free active life",
+    accent: "#22d3ee",
   },
-];
-
-const DIFFERENTIATORS = [
-  "Chiropractor-led clinic with integrated medical, therapy, and wellness services",
-  "Focus on treating root causes of pain and neuropathy, not just symptoms",
-  "Non-surgical, opioid-sparing strategies whenever possible",
-  "Personalized treatment plans tailored to your health history and goals",
-  "Convenient Mesa location serving the East Valley, with flexible scheduling and friendly staff",
 ];
 
 export default function JourneyMap() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const whyRef     = useRef<HTMLDivElement>(null);
-  const stepsRef   = useRef<HTMLDivElement>(null);
-  const ctaRef     = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const stickyRef    = useRef<HTMLDivElement>(null);   // background color target
+  const twoColRef    = useRef<HTMLDivElement>(null);   // fades out for CTA
+  const ctaRef       = useRef<HTMLDivElement>(null);   // grand-finale CTA frame
+
+  // Per-step refs
+  const text1Ref = useRef<HTMLDivElement>(null);
+  const text2Ref = useRef<HTMLDivElement>(null);
+  const text3Ref = useRef<HTMLDivElement>(null);
+  const img1Ref  = useRef<HTMLDivElement>(null);
+  const img2Ref  = useRef<HTMLDivElement>(null);
+  const img3Ref  = useRef<HTMLDivElement>(null);
+
+  const textRefs = [text1Ref, text2Ref, text3Ref];
+  const imgRefs  = [img1Ref,  img2Ref,  img3Ref];
 
   useGSAP(
     () => {
-      gsap.from(whyRef.current, {
-        y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
-        scrollTrigger: { trigger: whyRef.current, start: "top 82%" },
+      // ── Initial hidden states ─────────────────────────────────────────────
+      gsap.set([text2Ref.current, text3Ref.current], { opacity: 0, y: 30 });
+      gsap.set([img2Ref.current,  img3Ref.current],  { opacity: 0, y: 30 });
+      gsap.set(ctaRef.current,   { opacity: 0, scale: 0.92 });
+
+      // ── Master scrubbed timeline ──────────────────────────────────────────
+      // NOTE: no pin:true — sticky CSS handles viewport lock (Lenis-safe)
+      // Total duration 12; mapped to 300 vh of scroll (400vh - 100vh viewport)
+      //
+      //  0 → 2   : bg dark → light
+      //  0 → 4   : Step 1 holds visible
+      //  4 → 5.5 : Step 1 → Step 2 cross-fade
+      //  5.5→ 7  : Step 2 holds
+      //  7 → 8.5 : Step 2 → Step 3 cross-fade
+      //  8.5→ 9.5: Step 3 holds
+      //  9.5→12  : 2-col fades out, CTA scales in
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.5,
+        },
       });
-      if (stepsRef.current) {
-        gsap.from(stepsRef.current.children, {
-          y: 50, opacity: 0, scale: 0.96,
-          duration: 0.75, stagger: 0.16, ease: "power3.out",
-          scrollTrigger: { trigger: stepsRef.current, start: "top 80%" },
-        });
-      }
-      gsap.from(ctaRef.current, {
-        y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
-        scrollTrigger: { trigger: ctaRef.current, start: "top 82%" },
-      });
+
+      // ── Background: slate-950 → slate-50 ─────────────────────────────────
+      tl.to(stickyRef.current, {
+        backgroundColor: "#f8fafc",
+        duration: 2,
+        ease: "none",
+      }, 0);
+
+      // ── Step 1 → Step 2 ───────────────────────────────────────────────────
+      tl
+        .to([text1Ref.current, img1Ref.current], { opacity: 0, y: -30, duration: 0.8 }, 4)
+        .to([text2Ref.current, img2Ref.current], { opacity: 1, y: 0,   duration: 0.8 }, 4.7);
+
+      // ── Step 2 → Step 3 ───────────────────────────────────────────────────
+      tl
+        .to([text2Ref.current, img2Ref.current], { opacity: 0, y: -30, duration: 0.8 }, 7)
+        .to([text3Ref.current, img3Ref.current], { opacity: 1, y: 0,   duration: 0.8 }, 7.7);
+
+      // ── Grand-finale CTA reveal ───────────────────────────────────────────
+      tl
+        .to(twoColRef.current, { opacity: 0, scale: 0.96, duration: 1   }, 9.5)
+        .to(ctaRef.current,    { opacity: 1, scale: 1,    duration: 1.2 }, 10);
     },
-    { scope: sectionRef }
+    { scope: containerRef }
   );
 
   return (
     <section
-      id="contact"
-      ref={sectionRef}
-      style={{
-        position: "relative",
-        background: "linear-gradient(180deg, #FFFFFF 0%, #F8FFFE 100%)",
-        padding: "100px 0 120px",
-        overflow: "hidden",
-      }}
+      ref={containerRef}
+      id="journey-section"
+      style={{ height: "400vh", position: "relative" }}
     >
-      <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
-        <div className="blob blob-2" style={{ top: "5%",  left: "45%",  width: 380, height: 380, background: "radial-gradient(circle, #ECE7FF, transparent)", opacity: 0.35 }} />
-        <div className="blob blob-3" style={{ bottom: "5%", right: "10%", width: 320, height: 320, background: "radial-gradient(circle, #E2F9F5, transparent)", opacity: 0.35 }} />
-      </div>
+      {/* ── Sticky viewport wrapper ──────────────────────────────────────── */}
+      {/* Starts slate-950 (matches #integrated-services-section); GSAP animates to slate-50 */}
+      <div
+        ref={stickyRef}
+        className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden px-6"
+        style={{
+          backgroundColor: "#0f172a", // slate-950 — matches previous dark section
+          willChange: "background-color",
+        }}
+      >
+        {/* ── Ambient blobs (light palette, appear as bg brightens) ─────── */}
+        <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div className="blob blob-1" style={{ top: "-10%", left: "5%",   width: 500, height: 500, background: "radial-gradient(circle, rgba(45,212,191,0.12), transparent)" }} />
+          <div className="blob blob-2" style={{ bottom: "-8%", right: "5%", width: 450, height: 450, background: "radial-gradient(circle, rgba(167,139,250,0.1), transparent)" }} />
+        </div>
 
-      <div style={{ position: "relative", zIndex: 10, maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
+        {/* ── Two-column layout ─────────────────────────────────────────── */}
+        <div
+          ref={twoColRef}
+          className="relative z-10 w-full max-w-6xl grid items-center gap-12 md:gap-16"
+          style={{ gridTemplateColumns: "1fr 1fr", willChange: "transform, opacity" }}
+        >
 
-        {/* ── Why Choose Us ─────────────────────────── */}
-        <div ref={whyRef} style={{ marginBottom: 90 }}>
-          <div style={{ textAlign: "center", marginBottom: 44 }}>
-            <div
-              style={{
-                marginBottom: 18,
-                fontSize: "0.75rem", fontWeight: 600, color: "#0891B2",
-                letterSpacing: "0.06em", textTransform: "uppercase",
-                fontFamily: "var(--font-body)",
-              }}
-            >
-              Why Patients Choose Us
-            </div>
-            <h2
-              style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: "clamp(1.8rem, 3.5vw, 2.9rem)",
-                fontWeight: 700, color: "#0C2340",
-                lineHeight: 1.2, letterSpacing: "-0.02em", marginBottom: 16,
-              }}
-            >
-              Why Patients in Mesa Choose<br />
-              <span className="text-gradient-teal">City Health Services</span>
-            </h2>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.75, color: "#64748B", maxWidth: 600, margin: "0 auto" }}>
-              There are many chiropractic and pain clinics in Mesa. Patients choose City Health Services
-              because they want a team that looks at the whole person, communicates clearly, and focuses
-              on long-term solutions instead of quick fixes.
-            </p>
+          {/* ── Left: stacked absolute text blocks ────────────────────── */}
+          <div className="relative" style={{ minHeight: 320 }}>
+            {STEPS.map((step, i) => (
+              <div
+                key={step.num}
+                ref={textRefs[i]}
+                className="absolute inset-0 flex flex-col justify-center"
+                style={{
+                  willChange: "transform, opacity",
+                  // Inactive panels must not capture pointer events
+                  pointerEvents: i === 0 ? "auto" : "none",
+                }}
+              >
+                {/* Step number */}
+                <div
+                  style={{
+                    fontSize: "0.7rem", fontWeight: 700,
+                    color: step.accent, letterSpacing: "0.14em",
+                    textTransform: "uppercase" as const,
+                    fontFamily: "var(--font-body)", marginBottom: 14,
+                  }}
+                >
+                  {step.num}
+                </div>
+
+                {/* Headline */}
+                <h2
+                  style={{
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "clamp(1.6rem, 2.8vw, 2.4rem)",
+                    fontWeight: 700, lineHeight: 1.2,
+                    color: "#FFFFFF",
+                    letterSpacing: "-0.02em",
+                    marginBottom: 18,
+                  }}
+                >
+                  {step.title}
+                </h2>
+
+                {/* Body */}
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)", fontSize: "1rem",
+                    lineHeight: 1.75, color: "rgba(203,213,225,0.85)", // slate-300 light
+                    maxWidth: 440,
+                    marginBottom: 28,
+                  }}
+                >
+                  {step.body}
+                </p>
+
+                {/* Step progress dots */}
+                <div style={{ display: "flex", gap: 8 }}>
+                  {STEPS.map((_, dotIdx) => (
+                    <div
+                      key={dotIdx}
+                      style={{
+                        width: dotIdx === i ? 24 : 8,
+                        height: 8,
+                        borderRadius: 4,
+                        background: dotIdx === i ? step.accent : "rgba(255,255,255,0.2)",
+                        transition: "width 300ms, background 300ms",
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
+          {/* ── Right: glassmorphic showcase container ─────────────────── */}
+          {/* pointer-events:none on wrapper; interactive children opt-in */}
           <div
-            className="glass"
+            className="relative w-full rounded-2xl overflow-hidden shadow-xl aspect-square"
             style={{
-              borderRadius: 24, padding: "38px 44px",
-              background: "linear-gradient(135deg, rgba(8,145,178,0.05), rgba(20,184,166,0.03))",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              background: "rgba(255,255,255,0.4)",
+              border: "1px solid rgba(203,213,225,0.5)", // slate-200/50
+              pointerEvents: "none",
             }}
           >
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                gap: "14px 32px", marginBottom: 28,
-              }}
-            >
-              {DIFFERENTIATORS.map((d) => (
-                <div key={d} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+            {STEPS.map((step, i) => (
+              <div
+                key={step.num}
+                ref={imgRefs[i]}
+                className="absolute inset-0"
+                style={{ willChange: "transform, opacity" }}
+              >
+                {/* Full-bleed journey image */}
+                <Image
+                  src={step.image}
+                  alt={step.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority={i === 0}
+                />
+
+                {/* Subtle bottom gradient for text legibility */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: "linear-gradient(to top, rgba(15,23,42,0.65) 0%, rgba(15,23,42,0.1) 50%, transparent 100%)",
+                  }}
+                />
+
+                {/* Step label floating at bottom */}
+                <div
+                  className="absolute bottom-0 left-0 right-0"
+                  style={{ padding: "28px 32px" }}
+                >
                   <div
                     style={{
-                      width: 22, height: 22, borderRadius: "50%", marginTop: 1,
-                      background: "rgba(8,145,178,0.1)", border: "1.5px solid rgba(8,145,178,0.25)",
-                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      background: "rgba(255,255,255,0.1)",
+                      backdropFilter: "blur(10px)",
+                      WebkitBackdropFilter: "blur(10px)",
+                      border: `1px solid ${step.accent}40`,
+                      borderRadius: 50, padding: "6px 16px",
                     }}
                   >
-                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#0891B2" }} />
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: step.accent }} />
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", fontWeight: 600, color: step.accent, letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
+                      Step {step.num}
+                    </span>
                   </div>
-                  <span style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "#374151", lineHeight: 1.6 }}>{d}</span>
                 </div>
-              ))}
-            </div>
-            <a
-              href="#reviews"
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                fontFamily: "var(--font-body)", fontWeight: 600, fontSize: "0.9rem",
-                color: "#0891B2", textDecoration: "none", cursor: "pointer",
-              }}
-            >
-              See What Our Patients Say →
-            </a>
+              </div>
+            ))}
           </div>
+
         </div>
 
-        {/* ── How to Get Started ────────────────────── */}
-        <div>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
+        {/* ── Grand-finale CTA frame (fades in at end of timeline) ──────── */}
+        <div
+          ref={ctaRef}
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+          style={{
+            zIndex: 20,
+            pointerEvents: "none",
+            willChange: "transform, opacity",
+          }}
+        >
+          {/* Card */}
+          <div
+            style={{
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              background: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(8,145,178,0.15)",
+              borderRadius: 28,
+              padding: "56px 64px",
+              maxWidth: 600,
+              boxShadow: "0 32px 80px rgba(8,145,178,0.12), 0 8px 24px rgba(0,0,0,0.06)",
+              pointerEvents: "auto",
+            }}
+          >
+            {/* Eyebrow */}
             <div
               style={{
-                marginBottom: 18,
-                fontSize: "0.75rem", fontWeight: 600, color: "#0891B2",
-                letterSpacing: "0.06em", textTransform: "uppercase",
-                fontFamily: "var(--font-body)",
+                fontSize: "0.72rem", fontWeight: 700,
+                color: "#0891B2", letterSpacing: "0.1em",
+                textTransform: "uppercase" as const,
+                fontFamily: "var(--font-body)", marginBottom: 20,
               }}
             >
-              Simple Process
+              Your Journey Starts Here
             </div>
+
+            {/* Headline */}
             <h2
               style={{
                 fontFamily: "var(--font-heading)",
-                fontSize: "clamp(1.8rem, 3.5vw, 2.9rem)",
-                fontWeight: 700, color: "#0C2340",
-                lineHeight: 1.2, letterSpacing: "-0.02em", marginBottom: 14,
+                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+                fontWeight: 700, lineHeight: 1.18,
+                color: "#0C2340", letterSpacing: "-0.02em",
+                marginBottom: 18,
               }}
             >
-              How to{" "}
-              <span className="text-gradient-teal">Get Started</span>
+              Ready to Rewrite Your<br />
+              <span className="text-gradient-teal">Health Story?</span>
             </h2>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.75, color: "#64748B", maxWidth: 520, margin: "0 auto" }}>
-              Getting help for chronic pain and nerve symptoms should feel straightforward,
-              not overwhelming. Here&apos;s how the process works.
-            </p>
-          </div>
 
-          <div
-            ref={stepsRef}
-            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 22 }}
-          >
-            {STEPS.map((s) => {
-              const Icon = s.icon;
-              return (
-                <div
-                  key={s.step}
-                  className="glass pillar-card"
-                  style={{ borderRadius: 22, padding: "32px 28px", position: "relative", overflow: "hidden" }}
-                >
-                  <div style={{ position: "absolute", top: -6, right: 16, fontFamily: "var(--font-heading)", fontSize: "5rem", fontWeight: 800, color: "rgba(0,0,0,0.035)", lineHeight: 1, userSelect: "none", pointerEvents: "none" }}>
-                    {s.step}
-                  </div>
-                  <div style={{ position: "absolute", inset: 0, borderRadius: 22, background: s.bg, opacity: 0.22, zIndex: 0 }} />
-                  <div style={{ position: "relative", zIndex: 1 }}>
-                    <div
-                      style={{
-                        width: 48, height: 48, borderRadius: 14,
-                        background: "rgba(255,255,255,0.7)",
-                        border: "1px solid rgba(255,255,255,0.9)",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-                        display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18,
-                      }}
-                    >
-                      <Icon size={24} color={s.color} strokeWidth={1.8} />
-                    </div>
-                    <div style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", fontWeight: 700, color: s.color, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>
-                      Step {s.step}
-                    </div>
-                    <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.1rem", fontWeight: 600, color: "#0C2340", marginBottom: 10, lineHeight: 1.3 }}>
-                      {s.title}
-                    </h3>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", lineHeight: 1.68, color: "#475569" }}>
-                      {s.desc}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* CTA strip */}
-        <div
-          ref={ctaRef}
-          id="start"
-          className="glass"
-          style={{
-            marginTop: 56, borderRadius: 24, padding: "40px 44px",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-            flexWrap: "wrap", gap: 24,
-            background: "linear-gradient(135deg, rgba(8,145,178,0.06), rgba(139,92,246,0.04))",
-          }}
-        >
-          <div>
-            <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "1.45rem", fontWeight: 700, color: "#0C2340", marginBottom: 8 }}>
-              Ready to Begin Your Journey?
-            </h3>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.97rem", color: "#64748B", maxWidth: 420 }}>
-              Your first consultation is complimentary. Our team is ready to build
-              your custom care plan today.
+            {/* Sub */}
+            <p
+              style={{
+                fontFamily: "var(--font-body)", fontSize: "1rem",
+                lineHeight: 1.72, color: "#475569",
+                maxWidth: 400, margin: "0 auto 36px",
+              }}
+            >
+              Take the first step toward a life without chronic pain — your
+              comprehensive evaluation is waiting.
             </p>
-          </div>
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+
+            {/* Pulsing CTA button */}
             <a
               href="#contact"
-              className="btn-primary"
-              style={{ padding: "14px 26px", borderRadius: 14, fontSize: "0.92rem", whiteSpace: "nowrap", boxShadow: "0 8px 26px rgba(8,145,178,0.35)" }}
-            >
-              Request a Chiropractic Evaluation →
-            </a>
-            <a
-              href="tel:4806495297"
+              className="btn-primary btn-cta-pulse"
               style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "14px 22px", borderRadius: 14,
-                fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.92rem",
-                color: "#0C2340", background: "rgba(255,255,255,0.7)",
-                border: "1px solid rgba(255,255,255,0.9)",
-                textDecoration: "none", whiteSpace: "nowrap",
-                boxShadow: "0 4px 14px rgba(0,0,0,0.07)",
+                padding: "16px 40px",
+                borderRadius: 14,
+                fontSize: "1rem",
+                boxShadow: "0 8px 26px rgba(8,145,178,0.35)",
+                display: "inline-flex",
               }}
             >
-              <Phone size={16} color="#0891B2" />
-              Call (480) 649-5297
+              Request Your Evaluation
+              <ArrowRight size={18} style={{ marginLeft: 8 }} />
             </a>
+
+            {/* Supporting line */}
+            <p
+              style={{
+                marginTop: 18,
+                fontFamily: "var(--font-body)", fontSize: "0.8rem",
+                color: "#94A3B8",
+              }}
+            >
+              No obligation · City Health Services · Mesa, AZ
+            </p>
           </div>
         </div>
+
       </div>
     </section>
   );

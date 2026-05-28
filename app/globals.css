@@ -203,6 +203,20 @@
   animation: pulse-ring 3s ease-in-out infinite;
 }
 
+/* ─── Journey CTA Pulse ──────────────────────────── */
+@keyframes cta-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(8, 145, 178, 0.45); }
+  70%  { box-shadow: 0 0 0 14px rgba(8, 145, 178, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(8, 145, 178, 0); }
+}
+.btn-cta-pulse {
+  animation: cta-pulse-ring 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-cta-pulse { animation: none; }
+}
+
 /* ─── Scrollbar ───────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: #f8f9fa; }
